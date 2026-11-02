@@ -1,0 +1,2 @@
+# Previous proposed identity — NOT the original brand logo
+These vector marks, packaging layouts and social templates were drawn for an earlier design concept and are **not** taken from the real Aduné Home website. Do not present any of them as the official logo. The replacement designs below preferentially feature Aduné source photography and its exact logo only after successful `npm run sync:assets`.

@@ -1,0 +1,38 @@
+# Installed dependencies and package-manager caches
+node_modules/
+.pnpm-store/
+.npm/
+.yarn/cache/
+.yarn/unplugged/
+
+# Generated builds, tool caches, and local deployment state
+dist/
+build/
+coverage/
+.cache/
+.vite/
+.turbo/
+.next/
+.parcel-cache/
+.sites-runtime/
+.vercel/
+.netlify/
+*.tsbuildinfo
+
+# Local configuration and credentials
+.env*
+!.env.example
+!.env.*.example
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+service-account*.json
+
+# Logs and operating-system files
+*.log
+.DS_Store
+Thumbs.db
+Desktop.ini

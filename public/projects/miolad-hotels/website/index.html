@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#1B3FC6">
+  <title>MIOLAD Hotels — Settle in.</title>
+  <meta name="description" content="Meet MIOLAD Hotels. Nine rooms at ₦100,000 per room, per night. Explore the hotel and plan your stay.">
+  <link rel="icon" type="image/svg+xml" href="assets/miolad-symbol-blue.svg">
+  <link rel="preload" as="font" type="font/ttf" href="assets/fonts/cormorantgaramond.ttf" crossorigin>
+  <link rel="preload" as="image" href="assets/hotel-exterior.webp">
+  <link rel="stylesheet" href="styles.css">
+  <script defer src="contact.js"></script>
+  <script defer src="site.js"></script>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden"><symbol id="arrow-down-right" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="m7 7 10 10" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M17 7v10H7" />
+</symbol><symbol id="arrow-up-right" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="M7 7h10v10" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M7 17 17 7" />
+</symbol><symbol id="arrow-down" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="M12 5v14" />
+  <path xmlns="http://www.w3.org/2000/svg" d="m19 12-7 7-7-7" />
+</symbol><symbol id="arrow-up" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="m5 12 7-7 7 7" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M12 19V5" />
+</symbol><symbol id="menu" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="M4 5h16" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M4 12h16" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M4 19h16" />
+</symbol><symbol id="expand" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="m15 15 6 6" />
+  <path xmlns="http://www.w3.org/2000/svg" d="m15 9 6-6" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M21 16v5h-5" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M21 8V3h-5" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M3 16v5h5" />
+  <path xmlns="http://www.w3.org/2000/svg" d="m3 21 6-6" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M3 8V3h5" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M9 9 3 3" />
+</symbol><symbol id="plus" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="M5 12h14" />
+  <path xmlns="http://www.w3.org/2000/svg" d="M12 5v14" />
+</symbol><symbol id="x" viewBox="0 0 24 24"><path xmlns="http://www.w3.org/2000/svg" d="M18 6 6 18" />
+  <path xmlns="http://www.w3.org/2000/svg" d="m6 6 12 12" />
+</symbol></svg>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="menu-link" href="#hotel">The hotel <svg aria-hidden="true"><use href="#arrow-down-right"/></svg></a>
+    <a class="brand" href="#" aria-label="MIOLAD Hotels home"><img src="assets/miolad-primary-blue.svg" alt="MIOLAD Hotels" width="537" height="155"></a>
+    <a class="header-plan" href="#plan">Plan your stay <svg aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+    <button class="mobile-menu-button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu"><svg aria-hidden="true"><use href="#menu"/></svg></button>
+  </header>
+  <nav id="mobile-menu" class="mobile-menu" aria-label="Main navigation" hidden>
+    <a href="#hotel">The hotel</a><a href="#stay">Your stay</a><a href="#gallery">A closer look</a><a href="#plan">Plan your stay</a>
+  </nav>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <img class="hero-image" src="assets/hotel-exterior.webp" alt="MIOLAD Hotels exterior, with a pale façade, dark roofs and a planted entrance" width="1448" height="1086" fetchpriority="high">
+      <div class="hero-shade"></div>
+      <div class="hero-bottom"><div><p class="hero-name">MIOLAD HOTELS</p><h1 id="hero-title">Settle in.</h1></div><a class="round-link" href="#hotel" aria-label="Explore the hotel"><svg aria-hidden="true"><use href="#arrow-down"/></svg></a></div>
+    </section>
+    <div class="arrival-strip"><span>A stay at MIOLAD</span><a href="#stay">₦100,000 <span>/ room / night</span></a><a href="#hotel" class="discover">Take a look around <svg aria-hidden="true"><use href="#arrow-down"/></svg></a></div>
+    <section id="hotel" class="intro section reveal">
+      <div class="small-symbol"><img src="assets/miolad-symbol-blue.svg" alt="" width="56" height="56"></div>
+      <h2>Your stay,<br>on a smaller scale.</h2>
+      <p>Welcome to MIOLAD. A hotel with nine rooms and a straightforward nightly rate. A place to arrive, unpack, and make a little time for yourself.</p>
+      <a class="text-link" href="#stay">Find your stay <svg aria-hidden="true"><use href="#arrow-up-right"/></svg></a>
+    </section>
+    <section id="stay" class="stay section reveal">
+      <div class="stay-photo"><img src="assets/hotel-exterior.webp" alt="A closer view of the hotel entrance and exterior" width="1448" height="1086" loading="lazy"><span class="photo-caption">MIOLAD, from the outside.</span></div>
+      <div class="stay-copy"><span class="section-index">01 / YOUR STAY</span><h2>A room.<br>Your own rhythm.</h2><p>A short visit or a little longer. Start with your dates and work out your room total before speaking with reception.</p><dl class="room-facts"><div><dt>Per room, per night</dt><dd>₦100,000</dd></div><div><dt>The hotel</dt><dd>Nine rooms</dd></div></dl><a class="button" href="#plan">Plan your stay <svg aria-hidden="true"><use href="#arrow-up-right"/></svg></a></div>
+    </section>
+    <section id="gallery" class="gallery section reveal">
+      <div class="section-heading"><div><span class="section-index">02 / THE HOTEL</span><h2>A closer look.</h2></div><p>The entrance, the roofline,<br>the place you arrive.</p></div>
+      <div class="gallery-grid">
+        <button class="gallery-item gallery-full" data-view="full" aria-label="View the full hotel exterior"><img src="assets/hotel-exterior.webp" alt="The hotel exterior" width="1448" height="1086" loading="lazy"><span>The hotel <svg aria-hidden="true"><use href="#expand"/></svg></span></button>
+        <button class="gallery-item gallery-detail" data-view="entrance" aria-label="View the hotel entrance"><img src="assets/hotel-exterior.webp" alt="Detail of the entrance on the left of the hotel" width="1448" height="1086" loading="lazy"><span>The entrance <svg aria-hidden="true"><use href="#expand"/></svg></span></button>
+      </div>
+    </section>
+    <section id="plan" class="planner section reveal">
+      <div class="planner-intro"><span class="section-index">03 / PLAN A STAY</span><h2>When shall<br>we see you?</h2><p>Choose your dates for a room estimate. Reception will confirm availability and the final total.</p><img class="planner-symbol" src="assets/miolad-symbol-blue.svg" alt="" width="112" height="112"></div>
+      <form id="stay-form" class="stay-form">
+        <div class="date-fields"><label>Arrival<input id="arrival" name="arrival" type="date" required></label><label>Departure<input id="departure" name="departure" type="date" required></label></div>
+        <label>Rooms<select id="rooms" name="rooms"><option value="1">1 room</option><option value="2">2 rooms</option><option value="3">3 rooms</option><option value="4">4 rooms</option><option value="5">5 rooms</option><option value="6">6 rooms</option><option value="7">7 rooms</option><option value="8">8 rooms</option><option value="9">9 rooms</option></select></label>
+        <div class="estimate" aria-live="polite"><div><span>Estimated room total</span><strong id="estimate-total">₦100,000</strong></div><span id="estimate-detail">1 room · 1 night</span></div>
+        <p class="form-error" id="form-error" role="alert"></p>
+        <button class="button planner-submit" type="submit"><span id="submit-label">Save stay details</span><svg aria-hidden="true"><use href="#arrow-up-right"/></svg></button>
+        <p class="form-note" id="form-note">Save your dates and estimate to share with reception. This does not reserve a room.</p>
+        <p class="form-status" role="status" id="form-status"></p>
+      </form>
+    </section>
+    <section class="questions section reveal"><h2>Before you arrive.</h2><div class="question-list"><details><summary>What is the room rate?<svg aria-hidden="true"><use href="#plus"/></svg></summary><p>All nine rooms are currently ₦100,000 per room, per night. Confirm your dates and final total with reception before making travel plans.</p></details><details><summary>Does the website confirm a booking?<svg aria-hidden="true"><use href="#plus"/></svg></summary><p>No. The planner calculates a room estimate. A reservation is confirmed separately by reception, subject to availability.</p></details><details><summary>What should I confirm before arrival?<svg aria-hidden="true"><use href="#plus"/></svg></summary><p>Please confirm the room’s facilities, guest capacity, arrival arrangements, payment terms and cancellation conditions with reception.</p></details></div></section>
+  </main>
+  <footer class="footer"><div class="footer-top"><a href="#" class="footer-brand"><img src="assets/miolad-primary-blue.svg" alt="MIOLAD Hotels" width="537" height="155"></a><nav aria-label="Footer navigation"><a href="#hotel">The hotel</a><a href="#stay">Your stay</a><a href="#gallery">A closer look</a><a href="#plan">Plan a stay</a></nav><div id="public-contact" hidden></div></div><div class="footer-bottom"><span>© <span id="year">2026</span> MIOLAD Hotels</span><span>All rates in Nigerian naira.</span><button id="privacy-open" class="plain-button">Privacy</button><a href="#" aria-label="Back to top"><svg aria-hidden="true"><use href="#arrow-up"/></svg></a></div><div class="footer-word" aria-hidden="true">MIOLAD</div></footer>
+  <dialog id="gallery-dialog" class="gallery-dialog" aria-label="Hotel photo viewer"><button class="dialog-close" aria-label="Close image"><svg aria-hidden="true"><use href="#x"/></svg></button><figure><img src="assets/hotel-exterior.webp" alt="MIOLAD Hotels exterior" width="1448" height="1086"><figcaption>MIOLAD Hotels exterior</figcaption></figure></dialog>
+  <dialog id="privacy-dialog" class="privacy-dialog" aria-labelledby="privacy-title"><button class="dialog-close" aria-label="Close privacy information"><svg aria-hidden="true"><use href="#x"/></svg></button><h2 id="privacy-title">Your privacy.</h2><p>This website does not use analytics or tracking cookies. The stay planner calculates estimates on your device. It does not send your dates to the hotel or store a reservation.</p><p>Saving stay details downloads a text file to your device. If a reception contact link is configured, using it opens your chosen email, phone or WhatsApp service, which has its own privacy practices.</p></dialog>
+</body>
+</html>
