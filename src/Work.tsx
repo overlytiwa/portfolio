@@ -2,7 +2,12 @@ import { useContext, useEffect, useRef } from 'react';
 import { ImageSlot } from './components';
 import { projects, profile } from './content';
 import { RouteLink } from './navigation';
-import { gsap, SceneContext, reducedMotion } from './motion';
+import { SceneContext, reducedMotion } from './motion';
+
+function limitOffset(value: number, step: number, count: number, viewport: number, gutter: number) {
+  const end = Math.min(0, viewport - (count * step - 8 + gutter * 2));
+  return Math.max(end, Math.min(0, value));
+}
 
 export function Work() {
   const track = useRef<HTMLDivElement>(null);
@@ -17,17 +22,23 @@ export function Work() {
     let last = 0;
     const draw = () => {
       const { current, step } = position.current;
-      const width = step * cards.length;
       const gutter = window.innerWidth <= 650 ? 8 : 16;
       cards.forEach((card, index) => {
-        const x = ((index * step + current + step) % width + width) % width - step + gutter;
+        const x = index * step + current + gutter;
         card.style.transform = `translate3d(${x}px,0,0)`;
       });
     };
-    const resize = () => { position.current.step = cards[0].offsetWidth + 8; draw(); };
+    const clamp = (value: number) => limitOffset(value, position.current.step, cards.length, node.clientWidth, window.innerWidth <= 650 ? 8 : 16);
+    const resize = () => {
+      const p = position.current;
+      p.step = (cards[0]?.offsetWidth ?? 0) + 8;
+      p.current = clamp(p.current); p.target = clamp(p.target);
+      draw();
+    };
     const tick = (time: number) => {
       const delta = Math.min(32, time - last || 16.67); last = time;
       const p = position.current;
+      p.target = clamp(p.target);
       p.current += (p.target - p.current) * (reducedMotion() ? 1 : 1 - Math.pow(drag.current.down ? 0.76 : 0.88, delta / 16.67));
       draw();
       if (Math.abs(p.target - p.current) > 0.05) frame = requestAnimationFrame(tick);
@@ -80,14 +91,15 @@ export function Work() {
   return <main id="main-content" tabIndex={-1} className="work-page">
     <h1 className="sr-only">{profile.name} — {profile.role} / {profile.brand}</h1>
     <div className="project-track" aria-label="Projects — drag or use arrow keys" ref={track} onDragStart={event => event.preventDefault()}>
-      {[...projects, ...projects].map((project, index) => <RouteLink href={`/work/${project.slug}`} className="project-card" key={`${project.slug}-${index}`} tabIndex={index < projects.length ? 0 : -1} aria-hidden={index >= projects.length || undefined}
+      {projects.map((project, index) => <RouteLink href={`/work/${project.slug}`} className="project-card" key={project.slug}
         onFocus={event => {
           if (event.currentTarget.matches(':focus-visible')) {
             const x = event.currentTarget.getBoundingClientRect().x;
-            if (x < 0 || x > window.innerWidth - position.current.step) {
-              position.current.target = position.current.current = -index * position.current.step;
+            const gutter = window.innerWidth <= 650 ? 8 : 16;
+            if (x < gutter || x > window.innerWidth - position.current.step) {
+              position.current.target = position.current.current = limitOffset(-index * position.current.step, position.current.step, projects.length, track.current!.clientWidth, gutter);
               const cards = track.current!.querySelectorAll<HTMLElement>('.project-card');
-              cards.forEach((card, i) => gsap.set(card, { x: ((i - index + cards.length) % cards.length) * position.current.step + (window.innerWidth <= 650 ? 8 : 16) }));
+              cards.forEach((card, i) => { card.style.transform = `translate3d(${i * position.current.step + position.current.current + gutter}px,0,0)`; });
             }
           }
         }}
