@@ -29,9 +29,11 @@ export interface Project {
   coverImage: string;
   images: [string, string];
   tone: 'sand' | 'stone' | 'sage';
-  caseStudy?: 'adune-home' | 'miolad-hotels';
+  caseStudy?: 'adune-home' | 'miolad-hotels' | 'lasgidi';
+  websiteUrl?: string;
+  previewAnchor?: string;
 }
 
 export const projects: Project[] = [
-  { slug: 'project-03', title: 'Project 03', category: '', year: '', description: '', coverImage: '', images: ['', ''], tone: 'sage' },
+  { slug: 'lasgidi', title: 'Lasgidi', category: 'Web design / Front-end development', year: '2026', description: 'An immersive portrait of Lagos. A digital city guide that brings together the coastline, culture and architecture of a place always in motion.', coverImage: '/projects/lasgidi/lagos-marina.jpg', images: ['', ''], tone: 'stone', caseStudy: 'lasgidi', websiteUrl: 'https://lasgidi-blush.vercel.app/', previewAnchor: 'lasgidi-preview' },
 ];

@@ -1,0 +1,55 @@
+.lasgidi-case { --lasgidi-green: #233f3b; }
+.lasgidi-overview { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 7vw, 120px); }
+.lasgidi-lead { font-size: clamp(25px, 3.1vw, 46px); line-height: 1.12; letter-spacing: -.035em; max-width: 660px; }
+.lasgidi-copy { max-width: 540px; }
+.lasgidi-copy p, .lasgidi-direction-panel > p:last-of-type { font-size: 17px; line-height: 1.6; }
+.lasgidi-copy p + p { margin-top: 24px; }
+.lasgidi-facts { grid-template-columns: repeat(3, 1fr); border-top: 1px solid #d9dfdc; padding-top: 28px; margin-top: 64px; }
+.lasgidi-preview-intro { max-width: 620px; font-size: 19px; line-height: 1.45; margin-bottom: 36px; }
+.lasgidi-preview-stage { background: #edf0ee; padding: clamp(12px, 3vw, 44px); }
+.lasgidi-browser { width: 100%; margin: 0 auto; background: #fff; border: 1px solid #d4dbd7; box-shadow: 0 20px 50px #183d3010; }
+.lasgidi-browser[data-device="mobile"] { max-width: 390px; }
+.lasgidi-browser-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 13px 16px; background: #fff; border-bottom: 1px solid #e3e7e4; font-size: 10px; color: #52635b; }
+.lasgidi-browser-dots { display: flex; gap: 4px; }
+.lasgidi-browser-dots i { width: 5px; height: 5px; background: #bdc8c1; border-radius: 50%; }
+.lasgidi-live-label { display: flex; align-items: center; gap: 5px; text-transform: uppercase; letter-spacing: .08em; }
+.lasgidi-live-label::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #37654b; }
+.lasgidi-browser iframe { display: block; width: 100%; height: clamp(560px, 76svh, 850px); border: 0; background: #f8f8f4; }
+.lasgidi-case .case-preview-note a { display: inline-flex; align-items: center; gap: 5px; text-decoration: underline; text-underline-offset: 3px; }
+.lasgidi-case .case-preview-note .arrow { width: 12px; height: 12px; }
+.lasgidi-direction { display: grid; grid-template-columns: 1fr 1fr; }
+.lasgidi-direction figure { margin: 0; min-width: 0; display: flex; flex-direction: column; background: #f1f1ed; }
+.lasgidi-direction figure > img { width: 100%; height: 100%; min-height: 420px; flex: 1; object-fit: cover; }
+.lasgidi-direction figcaption { padding: 16px 20px; }
+.lasgidi-direction-panel { display: flex; flex-direction: column; padding: clamp(24px, 4vw, 64px); background: var(--lasgidi-green); color: #f8f8f4; }
+.lasgidi-statement { font-family: Georgia, serif; font-size: clamp(40px, 5vw, 80px); line-height: 1.04; letter-spacing: -.045em; margin: 60px 0 40px; }
+.lasgidi-direction-panel > p:last-of-type { font-size: 15px; }
+.lasgidi-swatches { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 44px; }
+.lasgidi-swatches > span { border: 1px solid #ffffff30; padding: 16px 10px; font-size: 10px; line-height: 1.7; }
+.lasgidi-features { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.lasgidi-features article { border-top: 1px solid #d9dfdc; padding-top: 22px; }
+.lasgidi-features h3 { font-size: clamp(24px, 2.4vw, 34px); line-height: 1.12; letter-spacing: -.03em; margin: 30px 0 20px; }
+.lasgidi-features p { font-size: 16px; line-height: 1.55; max-width: 400px; }
+.lasgidi-closing { margin-top: 140px; padding: 50px 0; border-top: 1px solid #d9dfdc; border-bottom: 1px solid #d9dfdc; }
+.lasgidi-closing > a { display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: clamp(32px, 5vw, 72px); letter-spacing: -.04em; line-height: 1.1; margin: 25px 0 40px; }
+.lasgidi-closing > a .arrow { width: 42px; height: 42px; }
+.lasgidi-closing > p { font-size: 11px; line-height: 1.6; }
+.lasgidi-closing > p a { display: inline-flex; gap: 4px; align-items: center; text-decoration: underline; text-underline-offset: 3px; }
+.lasgidi-closing > p .arrow { width: 11px; height: 11px; }
+@media (max-width: 800px) {
+  .lasgidi-overview { grid-template-columns: 1fr; gap: 28px; }
+  .lasgidi-direction { grid-template-columns: 1fr; }
+  .lasgidi-direction figure > img { min-height: 0; aspect-ratio: 4 / 3; }
+  .lasgidi-features { grid-template-columns: 1fr; gap: 36px; }
+  .lasgidi-features p { max-width: 600px; }
+}
+@media (max-width: 650px) {
+  .lasgidi-facts { grid-template-columns: 1fr; gap: 26px; }
+  .lasgidi-facts dt { margin-bottom: 8px; }
+  .lasgidi-preview-intro { font-size: 17px; }
+  .lasgidi-preview-stage { padding: 8px; }
+  .lasgidi-browser-bar { padding: 12px 8px; gap: 6px; font-size: 9px; }
+  .lasgidi-browser iframe { height: 640px; }
+  .lasgidi-statement { margin: 40px 0 28px; font-size: 54px; }
+  .lasgidi-closing { margin-top: 80px; }
+}
