@@ -33,7 +33,5 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  { slug: 'project-01', title: 'ADUNÉ Home', category: 'Brand identity / Digital design', year: '2026', description: 'A rebrand for a home décor brand. Strategy, identity and a digital experience built around objects of belonging.', coverImage: '/images/adune-cover.jpg', images: ['', ''], tone: 'sand', caseStudy: 'adune-home' },
-  { slug: 'project-02', title: 'MIOLAD Hotels', category: 'Brand identity / Website design', year: '2026', description: 'A hotel identity and digital experience, bringing together a distinctive logo system, guest stationery and a responsive stay-planning website.', coverImage: '/projects/miolad-hotels/website/assets/hotel-exterior.webp', images: ['', ''], tone: 'stone', caseStudy: 'miolad-hotels' },
   { slug: 'project-03', title: 'Project 03', category: '', year: '', description: '', coverImage: '', images: ['', ''], tone: 'sage' },
 ];
