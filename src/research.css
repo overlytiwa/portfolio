@@ -1,0 +1,48 @@
+.research-page { position: relative; isolation: isolate; min-height: 100svh; background: #eeefec; color: #171b18; overflow: hidden; }
+.research-word-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: .76; mask-image: linear-gradient(110deg, #0000 5%, #0004 36%, #000 72%); }
+.research-content { position: relative; padding: 0 clamp(16px, 3vw, 48px); }
+.research-hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; gap: 90px; padding: 125px 0 36px; }
+.research-topline { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.research-topline button { padding: 8px 0; border-bottom: 1px solid #171b1860; font-size: 10px; text-transform: uppercase; }
+.research-topline button:disabled { cursor: default; border-bottom: none; }
+.research-hero-title { padding: 20px 0; }
+.research-hero-title > .micro { display: block; margin-bottom: 30px; }
+.research-hero h1 { font-size: clamp(68px, 13.7vw, 230px); line-height: .85; letter-spacing: -.075em; margin-left: -.055em; }
+.research-hero h1 > span { color: #6d786e; }
+.research-hero-title > p { font-size: clamp(20px, 2vw, 30px); line-height: 1.25; letter-spacing: -.025em; max-width: 570px; margin-top: 38px; text-wrap: pretty; }
+.research-hero-bottom { display: flex; justify-content: space-between; align-items: end; gap: 32px; }
+.research-hero-bottom > a { display: inline-flex; align-items: center; gap: 24px; padding: 12px 0; }
+.research-hero-bottom > a .arrow { width: 18px; height: 18px; transform: rotate(135deg); }
+.research-hero-bottom > span { text-align: right; line-height: 1.6; }
+.research-paper { display: grid; grid-template-columns: 28% minmax(0, 1fr); gap: 30px; padding: 110px 0 100px; border-top: 1px solid #171b1833; scroll-margin-top: 90px; }
+.research-paper > .micro { padding-top: 6px; }
+.research-paper-body { max-width: 830px; background: linear-gradient(90deg, #eeefeced, #eeefecc9 75%, #eeefec00); }
+.research-paper h2 { font-size: clamp(30px, 3.3vw, 52px); line-height: 1.06; letter-spacing: -.04em; text-wrap: pretty; }
+.research-paper-body > p { max-width: 660px; font-size: 18px; line-height: 1.55; margin-top: 30px; }
+.research-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 38px; margin: 46px 0; }
+.research-facts div:first-child { grid-column: 1 / -1; }
+.research-facts dt { font-size: 10px; text-transform: uppercase; margin-bottom: 9px; }
+.research-facts dd { margin: 0; font-size: 15px; line-height: 1.4; }
+.research-download { display: flex; align-items: center; justify-content: space-between; gap: 24px; border-top: 1px solid #171b1860; border-bottom: 1px solid #171b1860; padding: 28px 0; font-size: clamp(26px, 3vw, 42px); line-height: 1.1; letter-spacing: -.035em; }
+.research-download small { display: block; font-size: 10px; line-height: 1.4; letter-spacing: 0; margin-top: 15px; text-transform: uppercase; }
+.research-download .arrow { width: 34px; height: 34px; transform: rotate(180deg); }
+.research-read { display: inline-flex; align-items: center; gap: 12px; font-size: 12px; padding: 18px 0; }
+.research-read .arrow { width: 14px; height: 14px; }
+.research-read:hover, .research-hero-bottom > a:hover { text-decoration: underline; text-underline-offset: 5px; }
+@media (max-width: 800px) {
+  .research-paper { grid-template-columns: 1fr; gap: 35px; padding-top: 70px; }
+  .research-hero { padding-top: 110px; gap: 70px; }
+  .research-word-field { opacity: .54; mask-image: linear-gradient(110deg, #0000, #0007 55%, #000); }
+}
+@media (max-width: 650px) {
+  .research-hero { padding-top: 105px; padding-bottom: 24px; min-height: 100svh; gap: 60px; }
+  .research-hero-title > .micro { font-size: 9px; }
+  .research-hero h1 { font-size: 15vw; }
+  .research-hero-title > p { max-width: 320px; margin-top: 28px; font-size: 20px; }
+  .research-hero-bottom { flex-direction: column; align-items: start; gap: 24px; }
+  .research-hero-bottom > span { text-align: left; font-size: 9px; }
+  .research-paper-body > p { font-size: 17px; }
+  .research-facts { grid-template-columns: 1fr; gap: 24px; }
+  .research-topline > span { font-size: 10px; }
+  .research-download { padding: 24px 0; }
+}
