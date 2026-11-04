@@ -9,7 +9,14 @@ function limitOffset(value: number, step: number, count: number, viewport: numbe
   return Math.max(end, Math.min(0, value));
 }
 
-export function Work() {
+export interface GalleryItem {
+  href: string;
+  title: string;
+  coverImage: string;
+  tone?: string;
+}
+
+export function CardGallery({ items, heading, label }: { items: GalleryItem[]; heading: string; label: string }) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef({ down: false, x: 0, start: 0, time: 0, velocity: 0, moved: false });
   const position = useRef({ current: 0, target: 0, step: 0 });
@@ -89,24 +96,30 @@ export function Work() {
     };
   }, [active]);
   return <main id="main-content" tabIndex={-1} className="work-page">
-    <h1 className="sr-only">{profile.name} — {profile.role} / {profile.brand}</h1>
-    <div className="project-track" aria-label="Projects — drag or use arrow keys" ref={track} onDragStart={event => event.preventDefault()}>
-      {projects.map((project, index) => <RouteLink href={`/work/${project.slug}`} className="project-card" key={project.slug}
+    <h1 className="sr-only">{heading}</h1>
+    <div className="project-track" aria-label={label} ref={track} onDragStart={event => event.preventDefault()}>
+      {items.map((item, index) => <RouteLink href={item.href} className="project-card" key={item.href}
         onFocus={event => {
           if (event.currentTarget.matches(':focus-visible')) {
             const x = event.currentTarget.getBoundingClientRect().x;
             const gutter = window.innerWidth <= 650 ? 8 : 16;
             if (x < gutter || x > window.innerWidth - position.current.step) {
-              position.current.target = position.current.current = limitOffset(-index * position.current.step, position.current.step, projects.length, track.current!.clientWidth, gutter);
+              position.current.target = position.current.current = limitOffset(-index * position.current.step, position.current.step, items.length, track.current!.clientWidth, gutter);
               const cards = track.current!.querySelectorAll<HTMLElement>('.project-card');
               cards.forEach((card, i) => { card.style.transform = `translate3d(${i * position.current.step + position.current.current + gutter}px,0,0)`; });
             }
           }
         }}
         onClick={event => { if (event.detail > 0 && drag.current.moved) { event.preventDefault(); drag.current.moved = false; } }}>
-        <h2 className="project-card-caption micro">{project.title}</h2>
-        <ImageSlot src={project.coverImage} label={`${project.title} cover`} tone={project.tone} eager />
+        <h2 className="project-card-caption micro">{item.title}</h2>
+        <ImageSlot src={item.coverImage} label={`${item.title} cover`} tone={item.tone} eager />
       </RouteLink>)}
     </div>
   </main>;
+}
+
+const projectCards: GalleryItem[] = projects.map(project => ({ href: `/work/${project.slug}`, title: project.title, coverImage: project.coverImage, tone: project.tone }));
+
+export function Work() {
+  return <CardGallery items={projectCards} heading={`${profile.name} — ${profile.role} / ${profile.brand}`} label="Projects — drag or use arrow keys" />;
 }

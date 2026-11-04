@@ -1,6 +1,7 @@
 import { useContext, useEffect, useRef, useState } from 'react';
 import { Arrow } from './components';
 import { SceneContext } from './motion';
+import { RouteLink } from './navigation';
 import './research.css';
 
 const paper = '/research/001/anecdote-research.pdf';
@@ -23,7 +24,7 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
     const pointer = cursor.current;
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
-      ctx.font = `${width < 650 ? 8 : 10}px "Courier New", monospace`;
+      ctx.font = `600 ${width < 650 ? 8 : 10}px "Courier New", monospace`;
       ctx.textBaseline = 'middle';
       pointer.x += (pointer.targetX - pointer.x) * 0.12;
       pointer.y += (pointer.targetY - pointer.y) * 0.12;
@@ -31,15 +32,14 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
       for (const point of points) {
         const nx = point.x / width, ny = point.y / height;
         const wave = Math.sin(ny * 10 + time * 0.23) * Math.cos(nx * 6 - time * 0.12);
-        let x = point.x + Math.sin(ny * 11 + time * 0.28) * 20 + wave * 12;
-        let y = point.y + Math.sin(nx * 9 - time * 0.2) * 16;
+        const x = point.x + Math.sin(ny * 11 + time * 0.28) * 20 + wave * 12;
+        const y = point.y + Math.sin(nx * 9 - time * 0.2) * 16;
         const dx = x - pointer.x, dy = y - pointer.y;
         const distance = Math.hypot(dx, dy);
-        const force = Math.exp(-distance * distance / 23000) * pointer.strength * 60;
-        if (distance > 0) { x += dx / distance * force; y += dy / distance * force; }
+        const highlight = Math.exp(-distance * distance / 23000) * pointer.strength * 0.35;
         const body = 1 - Math.pow((nx - 0.65) / 0.65, 2) - Math.pow((ny - 0.5) / 0.85, 2);
         const texture = Math.sin(nx * 13 + Math.cos(ny * 8 + time * 0.1)) * 0.3 + Math.cos(ny * 19 - nx * 7 + time * 0.13) * 0.2;
-        const opacity = clamp((body * 0.7 + texture - 0.12) * point.shade, 0, 0.64);
+        const opacity = clamp((body * 0.7 + texture - 0.04) * (0.65 + point.shade * 0.75) * 1.25 + highlight, 0, 0.92);
         if (opacity < 0.035) continue;
         ctx.fillStyle = `rgba(24, 28, 25, ${opacity})`;
         ctx.fillText(point.word, x, y);
@@ -106,7 +106,7 @@ export function Research() {
     <WordField paused={paused} reduced={reduced} />
     <div className="research-content">
       <section className="research-hero" aria-labelledby="research-title">
-        <div className="research-topline micro"><span>Research / 001</span><button type="button" onClick={() => setPaused(value => !value)} aria-pressed={paused || reduced} disabled={reduced}>{reduced ? 'Reduced motion' : paused ? 'Resume background' : 'Pause background'}</button></div>
+        <div className="research-topline micro"><RouteLink href="/research" className="research-back"><Arrow direction="left" /> All research / 001</RouteLink><button type="button" onClick={() => setPaused(value => !value)} aria-pressed={paused || reduced} disabled={reduced}>{reduced ? 'Reduced motion' : paused ? 'Resume background' : 'Pause background'}</button></div>
         <div className="research-hero-title"><span className="micro">Language. Context. Safeguarding.</span><h1 id="research-title">Anecdote<span aria-hidden="true">.</span></h1><p>A study of local, multimodal detection of child grooming indicators in short conversational text.</p></div>
         <div className="research-hero-bottom"><a href="#research-paper" className="micro">Explore the paper <Arrow direction="right" /></a><span className="micro">Ogundiji Tiwalope Testimony<br />Research paper / 8 pages</span></div>
       </section>

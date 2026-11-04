@@ -8,13 +8,16 @@ import { About } from './About';
 import { ProjectPage } from './ProjectPage';
 import { PageSurface } from './PageSurface';
 import { Research } from './Research';
+import { ResearchGallery } from './ResearchGallery';
 import { projects } from './content';
 import { gsap, reducedMotion } from './motion';
 
 const currentPath = () => window.location.pathname.replace(/\/$/, '') || '/';
 const isProject = (path: string) => projects.some(p => `/work/${p.slug}` === path);
-const researchPath = '/research/001';
-const surfaceKey = (path: string) => path === '/' || path === '/about' || path === researchPath ? path : 'project';
+const researchPath = '/research';
+const researchArticlePath = '/research/001';
+const isResearchArticle = (path: string) => path === researchArticlePath;
+const surfaceKey = (path: string) => isResearchArticle(path) ? 'research-article' : path === '/' || path === '/about' || path === researchPath ? path : 'project';
 
 export default function App() {
   const [path, setPath] = useState(currentPath);
@@ -31,7 +34,7 @@ export default function App() {
   const gesture = useRef({ x: 0, offset: 0, down: false, moved: false });
   const returnFocus = useRef<HTMLElement | null>(null);
   const duration = () => reducedMotion() ? 0 : 1.4;
-  const tiles = () => isProject(runtime.current.path) ? ['/', '/about', researchPath, 'project'] : ['/', '/about', researchPath];
+  const tiles = () => [...['/', '/about', researchPath], ...(isProject(runtime.current.path) ? ['project'] : isResearchArticle(runtime.current.path) ? ['research-article'] : [])];
   function tileGeometry(index: number) {
     const mobile = window.innerWidth <= 650;
     const width = mobile ? 100 : ((1 / tiles().length - 0.025) / 0.75) * 100;
@@ -189,7 +192,7 @@ export default function App() {
     window.addEventListener('popstate', onPop); window.addEventListener('resize', onResize);
     return () => { window.removeEventListener('popstate', onPop); window.removeEventListener('resize', onResize); };
   }, []);
-  useEffect(() => { document.title = path === researchPath ? 'Anecdote — Research 001 / Overly' : path === '/about' ? 'About — Ogundiji Tiwalope / Overly' : isProject(path) ? `${projects.find(p => path.endsWith(p.slug))!.title} — Overly` : 'Overly — Ogundiji Tiwalope'; }, [path]);
+  useEffect(() => { document.title = isResearchArticle(path) ? 'Anecdote — Research 001 / Overly' : path === researchPath ? 'Research — Ogundiji Tiwalope / Overly' : path === '/about' ? 'About — Ogundiji Tiwalope / Overly' : isProject(path) ? `${projects.find(p => path.endsWith(p.slug))!.title} — Overly` : 'Overly — Ogundiji Tiwalope'; }, [path]);
   function moveMenu(event: PointerEvent) {
     if (!gesture.current.down || runtime.current.busy) return;
     const delta = event.clientX - gesture.current.x;
@@ -228,8 +231,8 @@ export default function App() {
       }}
       onPointerDown={e => { if (!menuOpen || runtime.current.busy) return; gesture.current = { x: e.clientX, offset: runtime.current.offset, down: true, moved: false }; }}
       onPointerMove={moveMenu} onPointerUp={finishMenu} onPointerCancel={finishMenu}>
-      {['/', '/about', researchPath, 'project'].map(key => <PageSurface key={key} surfaceRef={node => { surfaces.current[key] = node; }} pageKey={key} active={surfaceKey(path) === key} menu={menuOpen && (key !== 'project' || isProject(path))} busy={busy} revealing={revealing} title={key === researchPath ? 'research' : key === '/about' ? 'about' : key === '/' ? 'cases' : project?.title.toLowerCase() ?? 'case'} onSelect={() => selectPage(key === 'project' ? projectPath : key)} onMenu={openMenu} onContact={openContact}>
-        {key === '/' ? <Work /> : key === '/about' ? <About onContact={openContact} /> : key === researchPath ? <Research /> : project ? <ProjectPage key={project.slug} project={project} /> : <main tabIndex={-1} className="not-found"><p className="micro">404</p><h1>Page not found.</h1><RouteLink href="/">Back to work <Arrow /></RouteLink></main>}
+      {['/', '/about', researchPath, 'research-article', 'project'].map(key => <PageSurface key={key} surfaceRef={node => { surfaces.current[key] = node; }} pageKey={key} active={surfaceKey(path) === key} menu={menuOpen && (key !== 'project' || isProject(path)) && (key !== 'research-article' || isResearchArticle(path))} busy={busy} revealing={revealing} title={key === 'research-article' ? 'anecdote' : key === researchPath ? 'research' : key === '/about' ? 'about' : key === '/' ? 'cases' : project?.title.toLowerCase() ?? 'case'} onSelect={() => selectPage(key === 'project' ? projectPath : key === 'research-article' ? researchArticlePath : key)} onMenu={openMenu} onContact={openContact}>
+        {key === '/' ? <Work /> : key === '/about' ? <About onContact={openContact} /> : key === researchPath ? <ResearchGallery /> : key === 'research-article' ? <Research /> : project ? <ProjectPage key={project.slug} project={project} /> : <main tabIndex={-1} className="not-found"><p className="micro">404</p><h1>Page not found.</h1><RouteLink href="/">Back to work <Arrow /></RouteLink></main>}
       </PageSurface>)}
     </div>
     <Contact open={contactOpen} close={() => setContactOpen(false)} />

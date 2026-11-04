@@ -1,8 +1,11 @@
 .research-page { position: relative; isolation: isolate; min-height: 100svh; background: #eeefec; color: #171b18; overflow: hidden; }
-.research-word-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: .76; mask-image: linear-gradient(110deg, #0000 5%, #0004 36%, #000 72%); }
+.research-word-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: 1; mask-image: linear-gradient(110deg, #0005 5%, #000b 36%, #000 72%); }
 .research-content { position: relative; padding: 0 clamp(16px, 3vw, 48px); }
 .research-hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; gap: 90px; padding: 125px 0 36px; }
 .research-topline { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.research-back { display: inline-flex; align-items: center; gap: 12px; }
+.research-back .arrow { width: 13px; height: 13px; }
+.research-back:hover { text-decoration: underline; text-underline-offset: 4px; }
 .research-topline button { padding: 8px 0; border-bottom: 1px solid #171b1860; font-size: 10px; text-transform: uppercase; }
 .research-topline button:disabled { cursor: default; border-bottom: none; }
 .research-hero-title { padding: 20px 0; }
@@ -32,7 +35,7 @@
 @media (max-width: 800px) {
   .research-paper { grid-template-columns: 1fr; gap: 35px; padding-top: 70px; }
   .research-hero { padding-top: 110px; gap: 70px; }
-  .research-word-field { opacity: .54; mask-image: linear-gradient(110deg, #0000, #0007 55%, #000); }
+  .research-word-field { opacity: .95; mask-image: linear-gradient(110deg, #0006, #000c 55%, #000); }
 }
 @media (max-width: 650px) {
   .research-hero { padding-top: 105px; padding-bottom: 24px; min-height: 100svh; gap: 60px; }
