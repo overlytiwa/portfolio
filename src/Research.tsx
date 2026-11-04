@@ -11,7 +11,6 @@ const clamp = (n: number, min = 0, max = 1) => Math.max(min, Math.min(max, n));
 function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const elapsed = useRef(0);
-  const cursor = useRef({ x: -1000, y: -1000, targetX: -1000, targetY: -1000, strength: 0, targetStrength: 0 });
   const { active } = useContext(SceneContext);
   useEffect(() => {
     const node = canvas.current;
@@ -21,25 +20,18 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
     const host = node.parentElement!;
     let width = 0, height = 0, frame = 0, previous = 0, phase = elapsed.current;
     let points: { x: number; y: number; word: string; shade: number }[] = [];
-    const pointer = cursor.current;
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
       ctx.font = `600 ${width < 650 ? 8 : 10}px "Courier New", monospace`;
       ctx.textBaseline = 'middle';
-      pointer.x += (pointer.targetX - pointer.x) * 0.12;
-      pointer.y += (pointer.targetY - pointer.y) * 0.12;
-      pointer.strength += (pointer.targetStrength - pointer.strength) * 0.08;
       for (const point of points) {
         const nx = point.x / width, ny = point.y / height;
         const wave = Math.sin(ny * 10 + time * 0.23) * Math.cos(nx * 6 - time * 0.12);
         const x = point.x + Math.sin(ny * 11 + time * 0.28) * 20 + wave * 12;
         const y = point.y + Math.sin(nx * 9 - time * 0.2) * 16;
-        const dx = x - pointer.x, dy = y - pointer.y;
-        const distance = Math.hypot(dx, dy);
-        const highlight = Math.exp(-distance * distance / 23000) * pointer.strength * 0.35;
         const body = 1 - Math.pow((nx - 0.65) / 0.65, 2) - Math.pow((ny - 0.5) / 0.85, 2);
         const texture = Math.sin(nx * 13 + Math.cos(ny * 8 + time * 0.1)) * 0.3 + Math.cos(ny * 19 - nx * 7 + time * 0.13) * 0.2;
-        const opacity = clamp((body * 0.7 + texture - 0.04) * (0.65 + point.shade * 0.75) * 1.25 + highlight, 0, 0.92);
+        const opacity = clamp((body * 0.7 + texture - 0.04) * (0.65 + point.shade * 0.75) * 1.25, 0, 0.92);
         if (opacity < 0.035) continue;
         ctx.fillStyle = `rgba(24, 28, 25, ${opacity})`;
         ctx.fillText(point.word, x, y);
@@ -73,20 +65,10 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
       if (active && !paused && !reduced && !document.hidden) frame = requestAnimationFrame(tick);
       else draw(phase);
     };
-    const move = (event: PointerEvent) => {
-      if (paused || reduced) return;
-      const rect = host.getBoundingClientRect();
-      pointer.targetX = event.clientX - rect.left; pointer.targetY = event.clientY - rect.top;
-      if (!pointer.targetStrength) { pointer.x = pointer.targetX; pointer.y = pointer.targetY; }
-      pointer.targetStrength = 1;
-    };
-    const leave = () => { pointer.targetStrength = 0; };
     const observer = new ResizeObserver(resize); observer.observe(host); resize(); sync();
-    host.addEventListener('pointermove', move); host.addEventListener('pointerleave', leave);
     document.addEventListener('visibilitychange', sync);
     return () => {
       cancelAnimationFrame(frame); observer.disconnect();
-      host.removeEventListener('pointermove', move); host.removeEventListener('pointerleave', leave);
       document.removeEventListener('visibilitychange', sync);
     };
   }, [active, paused, reduced]);
