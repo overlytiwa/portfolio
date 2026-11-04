@@ -18,7 +18,10 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
     if (!node || !context) return;
     const ctx = context;
     const host = node.parentElement!;
+    const scrollArea = host.closest<HTMLElement>('.page-scroll');
+    const pointer = { x: -1000, y: -1000, clientX: -1000, clientY: -1000, inside: false };
     let width = 0, height = 0, frame = 0, previous = 0, phase = elapsed.current;
+    let fade = 1;
     let points: { x: number; y: number; word: string; shade: number }[] = [];
     const draw = (time: number) => {
       ctx.clearRect(0, 0, width, height);
@@ -31,11 +34,24 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
         const y = point.y + Math.sin(nx * 9 - time * 0.2) * 16;
         const body = 1 - Math.pow((nx - 0.65) / 0.65, 2) - Math.pow((ny - 0.5) / 0.85, 2);
         const texture = Math.sin(nx * 13 + Math.cos(ny * 8 + time * 0.1)) * 0.3 + Math.cos(ny * 19 - nx * 7 + time * 0.13) * 0.2;
-        const opacity = clamp((body * 0.7 + texture - 0.04) * (0.65 + point.shade * 0.75) * 1.25, 0, 0.92);
-        if (opacity < 0.035) continue;
+        const ink = clamp((body * 0.7 + texture - 0.04) * (0.65 + point.shade * 0.75) * 1.25, 0, 0.92);
+        const base = ink * 0.24 * (0.4 + 0.6 * clamp(nx));
+        const dx = x + point.word.length * (width < 650 ? 2.4 : 3) - pointer.x;
+        const dy = y - pointer.y;
+        const spotlight = active && pointer.inside ? Math.exp(-(dx * dx + dy * dy) / (2 * 125 * 125)) : 0;
+        const opacity = base + (0.9 - base) * spotlight;
+        if (opacity < 0.012) continue;
         ctx.fillStyle = `rgba(24, 28, 25, ${opacity})`;
         ctx.fillText(point.word, x, y);
       }
+    };
+    const updateFade = () => {
+      const rect = host.getBoundingClientRect();
+      const viewportTop = scrollArea?.getBoundingClientRect().top ?? 0;
+      const progress = clamp((viewportTop - rect.top) / Math.max(1, height * 0.8));
+      fade = 1 - progress * progress * (3 - 2 * progress);
+      node.style.opacity = String(fade);
+      pointer.x = pointer.clientX - rect.left; pointer.y = pointer.clientY - rect.top;
     };
     const resize = () => {
       width = host.clientWidth; height = host.clientHeight;
@@ -51,25 +67,43 @@ function WordField({ paused, reduced }: { paused: boolean; reduced: boolean }) {
           points.push({ x: col * gap + (row % 2) * 8, y: row * line, word: words[Math.floor(seed * words.length)], shade: 0.35 + seed * 0.65 });
         }
       }
-      draw(phase);
+      updateFade(); draw(phase);
     };
+    const shouldAnimate = () => active && !paused && !reduced && !document.hidden && fade > 0;
     const tick = (time: number) => {
       if (time - previous >= 1000 / 30) {
         phase += Math.min((time - previous) / 1000, 0.05); elapsed.current = phase; previous = time;
         draw(phase);
       }
-      frame = requestAnimationFrame(tick);
+      frame = shouldAnimate() ? requestAnimationFrame(tick) : 0;
     };
     const sync = () => {
-      cancelAnimationFrame(frame); frame = 0; previous = performance.now();
-      if (active && !paused && !reduced && !document.hidden) frame = requestAnimationFrame(tick);
-      else draw(phase);
+      if (shouldAnimate()) {
+        if (!frame) { previous = performance.now(); frame = requestAnimationFrame(tick); }
+      } else { cancelAnimationFrame(frame); frame = 0; }
+      draw(phase);
     };
+    const move = (event: PointerEvent) => {
+      if (!active || event.pointerType === 'touch') return;
+      const rect = host.getBoundingClientRect();
+      pointer.clientX = event.clientX; pointer.clientY = event.clientY;
+      pointer.x = event.clientX - rect.left; pointer.y = event.clientY - rect.top;
+      pointer.inside = true; draw(phase);
+    };
+    const leave = () => { pointer.inside = false; draw(phase); };
+    const scroll = () => { updateFade(); sync(); };
+    const visibility = () => { if (document.hidden) pointer.inside = false; sync(); };
     const observer = new ResizeObserver(resize); observer.observe(host); resize(); sync();
-    document.addEventListener('visibilitychange', sync);
+    host.addEventListener('pointermove', move); host.addEventListener('pointerleave', leave);
+    scrollArea?.addEventListener('scroll', scroll, { passive: true });
+    window.addEventListener('blur', leave);
+    document.addEventListener('visibilitychange', visibility);
     return () => {
       cancelAnimationFrame(frame); observer.disconnect();
-      document.removeEventListener('visibilitychange', sync);
+      host.removeEventListener('pointermove', move); host.removeEventListener('pointerleave', leave);
+      scrollArea?.removeEventListener('scroll', scroll);
+      window.removeEventListener('blur', leave);
+      document.removeEventListener('visibilitychange', visibility);
     };
   }, [active, paused, reduced]);
   return <canvas ref={canvas} className="research-word-field" aria-hidden="true" />;
@@ -85,9 +119,9 @@ export function Research() {
     return () => query.removeEventListener('change', change);
   }, []);
   return <main tabIndex={-1} className="research-page">
-    <WordField paused={paused} reduced={reduced} />
     <div className="research-content">
       <section className="research-hero" aria-labelledby="research-title">
+        <WordField paused={paused} reduced={reduced} />
         <div className="research-topline micro"><RouteLink href="/research" className="research-back"><Arrow direction="left" /> All research / 001</RouteLink><button type="button" onClick={() => setPaused(value => !value)} aria-pressed={paused || reduced} disabled={reduced}>{reduced ? 'Reduced motion' : paused ? 'Resume background' : 'Pause background'}</button></div>
         <div className="research-hero-title"><span className="micro">Language. Context. Safeguarding.</span><h1 id="research-title">Anecdote<span aria-hidden="true">.</span></h1><p>A study of local, multimodal detection of child grooming indicators in short conversational text.</p></div>
         <div className="research-hero-bottom"><a href="#research-paper" className="micro">Explore the paper <Arrow direction="right" /></a><span className="micro">Ogundiji Tiwalope Testimony<br />Research paper / 8 pages</span></div>

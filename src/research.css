@@ -1,7 +1,7 @@
 .research-page { position: relative; isolation: isolate; min-height: 100svh; background: #eeefec; color: #171b18; overflow: hidden; }
-.research-word-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; opacity: .45; mask-image: linear-gradient(110deg, #0005 5%, #000b 36%, #000 72%); }
+.research-word-field { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; mask-image: linear-gradient(to bottom, #000 0%, #000 78%, #0000 100%); }
 .research-content { position: relative; padding: 0 clamp(16px, 3vw, 48px); }
-.research-hero { min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; gap: 90px; padding: 125px 0 36px; }
+.research-hero { position: relative; isolation: isolate; overflow: hidden; min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; gap: 90px; padding: 125px 0 36px; }
 .research-topline { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .research-back { display: inline-flex; align-items: center; gap: 12px; }
 .research-back .arrow { width: 13px; height: 13px; }
@@ -19,7 +19,7 @@
 .research-hero-bottom > span { text-align: right; line-height: 1.6; }
 .research-paper { display: grid; grid-template-columns: 28% minmax(0, 1fr); gap: 30px; padding: 110px 0 100px; border-top: 1px solid #171b1833; scroll-margin-top: 90px; }
 .research-paper > .micro { padding-top: 6px; }
-.research-paper-body { max-width: 830px; background: linear-gradient(90deg, #eeefeced, #eeefecc9 75%, #eeefec00); }
+.research-paper-body { max-width: 830px; }
 .research-paper h2 { font-size: clamp(30px, 3.3vw, 52px); line-height: 1.06; letter-spacing: -.04em; text-wrap: pretty; }
 .research-paper-body > p { max-width: 660px; font-size: 18px; line-height: 1.55; margin-top: 30px; }
 .research-facts { display: grid; grid-template-columns: 1fr 1fr; gap: 28px 38px; margin: 46px 0; }
@@ -35,7 +35,6 @@
 @media (max-width: 800px) {
   .research-paper { grid-template-columns: 1fr; gap: 35px; padding-top: 70px; }
   .research-hero { padding-top: 110px; gap: 70px; }
-  .research-word-field { opacity: .4; mask-image: linear-gradient(110deg, #0006, #000c 55%, #000); }
 }
 @media (max-width: 650px) {
   .research-hero { padding-top: 105px; padding-bottom: 24px; min-height: 100svh; gap: 60px; }
