@@ -16,7 +16,7 @@ export interface GalleryItem {
   tone?: string;
 }
 
-export function CardGallery({ items, heading, label }: { items: GalleryItem[]; heading: string; label: string }) {
+export function CardGallery({ items, heading, label, className = '' }: { items: GalleryItem[]; heading: string; label: string; className?: string }) {
   const track = useRef<HTMLDivElement>(null);
   const drag = useRef({ down: false, x: 0, start: 0, time: 0, velocity: 0, moved: false });
   const position = useRef({ current: 0, target: 0, step: 0 });
@@ -95,7 +95,7 @@ export function CardGallery({ items, heading, label }: { items: GalleryItem[]; h
       window.removeEventListener('pointermove', move); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); window.removeEventListener('blur', up);
     };
   }, [active]);
-  return <main id="main-content" tabIndex={-1} className="work-page">
+  return <main id="main-content" tabIndex={-1} className={`work-page ${className}`}>
     <h1 className="sr-only">{heading}</h1>
     <div className="project-track" aria-label={label} ref={track} onDragStart={event => event.preventDefault()}>
       {items.map((item, index) => <RouteLink href={item.href} className="project-card" key={item.href}

@@ -22,6 +22,6 @@ export function PageSurface({ surfaceRef, pageKey, active, menu, busy, revealing
       </div></div>
     </div>
     <div className="menu-page-title" aria-hidden="true"><span>{title}</span></div>
-    <button className="menu-page-select" aria-label={pageKey === '/' ? 'View cases' : pageKey === '/about' ? 'About Tiwalope' : pageKey === '/research' ? 'View all research' : pageKey === 'research-article' ? 'Return to research paper' : 'Return to project'} onClick={onSelect} tabIndex={menu ? 0 : -1} aria-hidden={!menu} />
+    <button className="menu-page-select" aria-label={pageKey === '/' ? 'View cases' : pageKey === '/about' ? 'About Tiwalope' : pageKey === '/research' ? 'View all research' : pageKey === '/side-quests' ? 'View Side Quests' : pageKey === 's-remote' ? 'Return to S-Remote' : pageKey === 'research-article' ? 'Return to research paper' : 'Return to project'} onClick={onSelect} tabIndex={menu ? 0 : -1} aria-hidden={!menu} />
   </div>;
 }
