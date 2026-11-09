@@ -6,6 +6,7 @@ import { AduneCaseStudy } from './AduneCaseStudy';
 import { MioladCaseStudy, mioladWebsite } from './MioladCaseStudy';
 import { aduneWebsite } from './aduneProject';
 import { LasgidiCaseStudy } from './LasgidiCaseStudy';
+import { DiscArchiveCaseStudy } from './DiscArchiveCaseStudy';
 
 export function ProjectPage({ project }: { project: Project }) {
   const next = projects[(projects.indexOf(project) + 1) % projects.length];
@@ -22,7 +23,7 @@ export function ProjectPage({ project }: { project: Project }) {
       </div>
       <ImageSlot src={project.coverImage} label={`${project.title} main image`} tone={project.tone} className="project-hero-image" eager />
     </section>
-    {project.caseStudy === 'lasgidi' ? <LasgidiCaseStudy website={website} /> : project.caseStudy === 'adune-home' ? <AduneCaseStudy /> : project.caseStudy === 'miolad-hotels' ? <MioladCaseStudy /> : <section className="project-detail-images" aria-label="Project gallery">{project.images.map((image, index) => <ImageSlot key={index} src={image} label={`${project.title} detail ${index + 1}`} tone={index === 0 ? 'stone' : 'sand'} />)}</section>}
+    {project.caseStudy === 'disc-archive' ? <DiscArchiveCaseStudy website={website} /> : project.caseStudy === 'lasgidi' ? <LasgidiCaseStudy website={website} /> : project.caseStudy === 'adune-home' ? <AduneCaseStudy /> : project.caseStudy === 'miolad-hotels' ? <MioladCaseStudy /> : <section className="project-detail-images" aria-label="Project gallery">{project.images.map((image, index) => <ImageSlot key={index} src={image} label={`${project.title} detail ${index + 1}`} tone={index === 0 ? 'stone' : 'sand'} />)}</section>}
     {projects.length > 1 ? <RouteLink href={`/work/${next.slug}`} className="next-project"><span className="micro">Next project</span><span>{next.title.toLowerCase()}</span><Arrow /></RouteLink> : <RouteLink href="/" className="next-project"><span className="micro">Back to the portfolio</span><span>all work</span><Arrow direction="left" /></RouteLink>}
   </main>;
 }

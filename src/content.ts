@@ -29,11 +29,12 @@ export interface Project {
   coverImage: string;
   images: [string, string];
   tone: 'sand' | 'stone' | 'sage';
-  caseStudy?: 'adune-home' | 'miolad-hotels' | 'lasgidi';
+  caseStudy?: 'adune-home' | 'miolad-hotels' | 'lasgidi' | 'disc-archive';
   websiteUrl?: string;
   previewAnchor?: string;
 }
 
 export const projects: Project[] = [
   { slug: 'lasgidi', title: 'Lasgidi', category: 'Web design / Front-end development', year: '2026', description: 'An immersive portrait of Lagos. A digital city guide that brings together the coastline, culture and architecture of a place always in motion.', coverImage: '/projects/lasgidi/lagos-marina.jpg', images: ['', ''], tone: 'stone', caseStudy: 'lasgidi', websiteUrl: 'https://lasgidi-blush.vercel.app/', previewAnchor: 'lasgidi-preview' },
+  { slug: 'disc-archive', title: 'The Disc Archive', category: 'Creative development / 3D web', year: '2026', description: 'An independent discography experience that turns seventeen Kanye West releases into a tactile collection of three-dimensional CDs, with album stories just beyond the surface.', coverImage: '/projects/disc-archive/cover.svg', images: ['', ''], tone: 'sand', caseStudy: 'disc-archive', websiteUrl: 'https://kw-seven.vercel.app/', previewAnchor: 'disc-archive-preview' },
 ];

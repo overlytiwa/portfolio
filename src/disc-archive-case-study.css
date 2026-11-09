@@ -1,0 +1,48 @@
+.disc-archive-case { --archive-paper: #f2f1ee; --archive-ink: #171715; }
+.disc-archive-intro { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 6vw, 100px); }
+.disc-archive-lead { max-width: 650px; font-size: clamp(25px, 3vw, 45px); line-height: 1.13; letter-spacing: -.035em; }
+.disc-archive-copy { max-width: 620px; }
+.disc-archive-copy p { font-size: 17px; line-height: 1.55; }
+.disc-archive-copy p + p { margin-top: 24px; }
+.disc-archive-facts { grid-template-columns: repeat(3, 1fr); padding-top: 28px; border-top: 1px solid #17171530; }
+.disc-archive-preview-intro { font-size: 19px; line-height: 1.45; max-width: 650px; margin-bottom: 36px; }
+.disc-archive-preview-stage { padding: clamp(10px, 3vw, 40px); background: #e8e7e2; }
+.disc-archive-browser { margin: auto; width: 100%; border: 1px solid #cfcec7; background: var(--archive-paper); }
+.disc-archive-browser[data-device="mobile"] { max-width: 390px; }
+.disc-archive-browser-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; background: #fafaf7; border-bottom: 1px solid #17171518; color: #686760; font-size: 10px; }
+.disc-archive-browser-bar .micro { font-size: 9px; }
+.disc-archive-dots { display: flex; gap: 4px; }
+.disc-archive-dots i { height: 5px; width: 5px; border-radius: 50%; background: #bbb9b0; }
+.disc-archive-browser iframe, .disc-archive-preview-placeholder { display: block; width: 100%; height: clamp(620px, 80svh, 900px); border: 0; background: var(--archive-paper); }
+.disc-archive-case .case-preview-note a { text-decoration: underline; text-underline-offset: 3px; }
+.disc-archive-case .case-preview-note .arrow { width: 12px; height: 12px; }
+.disc-archive-journey { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.disc-archive-journey article { padding-top: 20px; border-top: 1px solid #17171535; }
+.disc-archive-journey h3, .disc-archive-build h3 { font-size: clamp(25px, 2.5vw, 35px); line-height: 1.12; letter-spacing: -.035em; margin: 32px 0 20px; }
+.disc-archive-journey p, .disc-archive-build p { font-size: 16px; line-height: 1.55; }
+.disc-archive-direction { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(30px, 5vw, 80px); align-items: center; }
+.disc-archive-type-board { background: var(--archive-paper); color: var(--archive-ink); padding: clamp(24px, 3.5vw, 52px); }
+.disc-archive-type-board > p { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(48px, 5.6vw, 88px); line-height: .95; letter-spacing: -.055em; margin: 90px 0; }
+.disc-archive-rule { display: flex; justify-content: space-between; gap: 14px; border-top: 1px solid currentColor; padding-top: 12px; font-size: 10px; text-transform: uppercase; }
+.disc-archive-palette { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 40px; }
+.disc-archive-palette > span { min-height: 110px; padding: 18px 12px; font-size: 10px; line-height: 1.7; }
+.disc-archive-build { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; }
+.disc-archive-build article { border-top: 1px solid #17171535; }
+.disc-archive-closing { border-top: 1px solid #17171535; border-bottom: 1px solid #17171535; padding: 45px 0; margin-top: 140px; }
+.disc-archive-closing > a { display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: clamp(30px, 4.7vw, 68px); line-height: 1.08; letter-spacing: -.04em; margin: 24px 0 36px; }
+.disc-archive-closing > a .arrow { width: 40px; height: 40px; }
+.disc-archive-closing > p { max-width: 760px; font-size: 11px; line-height: 1.6; color: #56564f; }
+.disc-archive-closing > p a { text-decoration: underline; text-underline-offset: 3px; }
+.disc-archive-closing > p .arrow { width: 11px; height: 11px; }
+@media (max-width: 800px) {
+  .disc-archive-intro, .disc-archive-direction, .disc-archive-journey, .disc-archive-build { grid-template-columns: 1fr; gap: 32px; }
+  .disc-archive-copy, .disc-archive-lead { max-width: 700px; }
+}
+@media (max-width: 650px) {
+  .disc-archive-facts { grid-template-columns: 1fr; gap: 28px; }
+  .disc-archive-facts dt { margin-bottom: 8px; }
+  .disc-archive-preview-intro { font-size: 17px; }
+  .disc-archive-browser-bar { padding: 12px 10px; font-size: 9px; }
+  .disc-archive-type-board > p { font-size: 58px; margin: 60px 0; }
+  .disc-archive-closing { margin-top: 80px; }
+}
