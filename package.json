@@ -8,7 +8,8 @@
     "dev": "vite --host 0.0.0.0",
     "build": "tsc --noEmit && vite build && node scripts/static-routes.mjs",
     "preview": "vite preview --host 0.0.0.0",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "test:menu": "node --experimental-strip-types --test tests/menu-layout.test.mjs"
   },
   "dependencies": {
     "gsap": "^3.15.0",

@@ -12,6 +12,7 @@ import { ResearchGallery } from './ResearchGallery';
 import { SideQuests, SRemoteProject, sideQuestsPath, sRemotePath } from './SideQuests';
 import { projects } from './content';
 import { gsap, reducedMotion } from './motion';
+import { menuLayout, clampMenuOffset, revealMenuTile, snapMenuOffset, menuTilePosition } from './menuLayout';
 
 const currentPath = () => window.location.pathname.replace(/\/$/, '') || '/';
 const isProject = (path: string) => projects.some(p => `/work/${p.slug}` === path);
@@ -33,14 +34,26 @@ export default function App() {
   const stage = useRef<HTMLDivElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const runtime = useRef({ path: currentPath(), menu: false, busy: false, offset: 0 });
-  const gesture = useRef({ x: 0, offset: 0, down: false, moved: false });
+  const gesture = useRef({ x: 0, offset: 0, down: false, moved: false, pointerId: -1 });
   const returnFocus = useRef<HTMLElement | null>(null);
   const duration = () => reducedMotion() ? 0 : 1.4;
   const tiles = () => [...basePages, ...(isProject(runtime.current.path) ? ['project'] : isResearchArticle(runtime.current.path) ? ['research-article'] : runtime.current.path === sRemotePath ? ['s-remote'] : [])];
+  const layout = () => menuLayout(window.innerWidth, tiles().length);
   function tileGeometry(index: number) {
-    const mobile = window.innerWidth <= 650;
-    const width = mobile ? 100 : ((1 / tiles().length - 0.025) / 0.75) * 100;
-    return { x: window.innerWidth * (mobile ? index * 0.68 : 0.0125 + index / tiles().length) + runtime.current.offset, scale: mobile ? 0.6 : 0.75, clipPath: `inset(0 ${100 - width}% 0 0)`, '--menu-card-width': `${width}%` };
+    return menuTilePosition(index, runtime.current.offset, layout());
+  }
+  function positionMenu(offset: number, animate = false) {
+    runtime.current.offset = clampMenuOffset(offset, layout());
+    tiles().forEach((key, index) => {
+      const node = surfaces.current[key];
+      gsap.killTweensOf(node);
+      if (animate && !reducedMotion()) gsap.to(node, { ...tileGeometry(index), duration: 0.45, ease: 'power3.out' });
+      else gsap.set(node, tileGeometry(index));
+    });
+  }
+  function focusMenuTile(button: HTMLButtonElement, index: number) {
+    positionMenu(revealMenuTile(index, runtime.current.offset, layout()), true);
+    button.focus({ preventScroll: true });
   }
   function commit(to: string, push = true) {
     runtime.current.path = to;
@@ -50,6 +63,8 @@ export default function App() {
   function settle(to: string, focus = true) {
     const key = surfaceKey(to);
     runtime.current.menu = false; runtime.current.busy = false;
+    gesture.current.down = false; gesture.current.moved = false;
+    stage.current?.classList.remove('is-dragging');
     flushSync(() => { setMenuOpen(false); setBusy(false); setRevealing(false); });
     for (const [name, node] of Object.entries(surfaces.current)) {
       if (!node) continue;
@@ -68,8 +83,7 @@ export default function App() {
     if (runtime.current.busy || runtime.current.menu) return;
     returnFocus.current = document.activeElement as HTMLElement;
     runtime.current.menu = true; runtime.current.busy = true; runtime.current.offset = 0;
-    // Keep the current tile within reach on narrow screens.
-    if (window.innerWidth <= 650) runtime.current.offset = -tiles().indexOf(surfaceKey(runtime.current.path)) * window.innerWidth * 0.68;
+    runtime.current.offset = revealMenuTile(tiles().indexOf(surfaceKey(runtime.current.path)), 0, layout());
     flushSync(() => { setMenuOpen(true); setBusy(true); });
     if (reducedMotion()) {
       tiles().forEach((key, index) => { gsap.set(surfaces.current[key], { ...tileGeometry(index), visibility: 'visible', zIndex: 2 }); gsap.set(surfaces.current[key]!.querySelector('.menu-page-title span'), { yPercent: 0 }); });
@@ -99,7 +113,8 @@ export default function App() {
     const previous = runtime.current.path;
     const key = surfaceKey(to);
     const target = surfaces.current[key]!;
-    const targetIndex = tiles().indexOf(key);
+    const menuTiles = tiles();
+    const targetIndex = menuTiles.indexOf(key);
     const same = previous === to;
     if (!same) target.querySelector('.page-scroll')!.scrollTop = 0;
     commit(to);
@@ -110,7 +125,7 @@ export default function App() {
     gsap.set(target, { zIndex: 4 });
     tl.to(target, { x: 0, scale: 1, clipPath: 'inset(0 0% 0 0)', duration: duration(), ease: 'pageFlow' }, 0);
     tl.to(target.querySelector('.menu-page-title span'), { yPercent: -110, duration: duration() * 0.55, ease: 'power3.inOut' }, 0);
-    tiles().forEach((otherKey, index) => {
+    menuTiles.forEach((otherKey, index) => {
       if (otherKey === key) return;
       tl.to(surfaces.current[otherKey], { x: (index < targetIndex ? -1 : 1) * window.innerWidth, duration: duration(), ease: 'pageFlow' }, 0);
     });
@@ -188,29 +203,50 @@ export default function App() {
     const onResize = () => {
       if (!runtime.current.menu) return;
       timeline.current?.kill(); runtime.current.busy = false; setBusy(false); setRevealing(false);
-      runtime.current.offset = window.innerWidth <= 650 ? -tiles().indexOf(surfaceKey(runtime.current.path)) * window.innerWidth * 0.68 : 0;
-      tiles().forEach((key, i) => gsap.set(surfaces.current[key], tileGeometry(i)));
+      gesture.current.down = false; gesture.current.moved = false;
+      stage.current?.classList.remove('is-dragging');
+      positionMenu(revealMenuTile(tiles().indexOf(surfaceKey(runtime.current.path)), runtime.current.offset, layout()));
     };
     window.addEventListener('popstate', onPop); window.addEventListener('resize', onResize);
     return () => { window.removeEventListener('popstate', onPop); window.removeEventListener('resize', onResize); };
   }, []);
+  useEffect(() => {
+    if (!menuOpen) return;
+    const node = stage.current!;
+    const wheel = (event: WheelEvent) => {
+      if (event.ctrlKey || runtime.current.busy || gesture.current.down) return;
+      event.preventDefault();
+      const delta = Math.abs(event.deltaX) > Math.abs(event.deltaY) ? event.deltaX : event.deltaY;
+      positionMenu(runtime.current.offset - delta * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? window.innerWidth : 1));
+    };
+    const blur = () => {
+      if (!gesture.current.down) return;
+      gesture.current.down = false;
+      stage.current?.classList.remove('is-dragging');
+      positionMenu(snapMenuOffset(runtime.current.offset, layout()), true);
+      gesture.current.moved = false;
+    };
+    node.addEventListener('wheel', wheel, { passive: false });
+    window.addEventListener('blur', blur);
+    return () => { node.removeEventListener('wheel', wheel); window.removeEventListener('blur', blur); };
+  }, [menuOpen]);
   useEffect(() => { document.title = path === sRemotePath ? 'S-Remote — Side Quests / Overly' : path === sideQuestsPath ? 'Side Quests — Ogundiji Tiwalope / Overly' : isResearchArticle(path) ? 'Anecdote — Research 001 / Overly' : path === researchPath ? 'Research — Ogundiji Tiwalope / Overly' : path === '/about' ? 'About — Ogundiji Tiwalope / Overly' : isProject(path) ? `${projects.find(p => path.endsWith(p.slug))!.title} — Overly` : 'Overly — Ogundiji Tiwalope'; }, [path]);
   function moveMenu(event: PointerEvent) {
-    if (!gesture.current.down || runtime.current.busy) return;
+    if (!gesture.current.down || runtime.current.busy || event.pointerId !== gesture.current.pointerId) return;
     const delta = event.clientX - gesture.current.x;
     if (Math.abs(delta) < 5 && !gesture.current.moved) return;
     gesture.current.moved = true;
+    stage.current?.classList.add('is-dragging');
     event.currentTarget.setPointerCapture(event.pointerId);
-    const max = window.innerWidth <= 650 ? (tiles().length - 1) * window.innerWidth * 0.68 : 0;
-    runtime.current.offset = Math.max(-max, Math.min(0, gesture.current.offset + delta));
-    tiles().forEach((key, i) => gsap.set(surfaces.current[key], tileGeometry(i)));
+    positionMenu(gesture.current.offset + delta);
   }
-  function finishMenu() {
+  function finishMenu(event: PointerEvent) {
+    if (!gesture.current.down || event.pointerId !== gesture.current.pointerId) return;
     gesture.current.down = false;
+    stage.current?.classList.remove('is-dragging');
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
     if (!gesture.current.moved) return;
-    const step = window.innerWidth * 0.68;
-    runtime.current.offset = Math.round(runtime.current.offset / step) * step;
-    tiles().forEach((key, i) => gsap.to(surfaces.current[key], { ...tileGeometry(i), duration: reducedMotion() ? 0 : 0.65, ease: 'power3.out' }));
+    positionMenu(snapMenuOffset(runtime.current.offset, layout()), true);
     // A synthetic click follows pointerup; keep it from selecting a dragged page.
     window.setTimeout(() => { gesture.current.moved = false; }, 0);
   }
@@ -223,15 +259,17 @@ export default function App() {
       onKeyDown={e => {
         if (!menuOpen) return;
         if (e.key === 'Escape') { e.preventDefault(); closeMenu(); }
-        if (e.key === 'Tab') {
+        if (['Tab', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
           const buttons = [...stage.current!.querySelectorAll<HTMLButtonElement>('.page-surface[aria-hidden="false"] .menu-page-select')];
+          if (!buttons.length || runtime.current.busy) { e.preventDefault(); return; }
           const index = buttons.indexOf(document.activeElement as HTMLButtonElement);
-          e.preventDefault(); const next = buttons[(index + (e.shiftKey ? -1 : 1) + buttons.length) % buttons.length];
-          if (window.innerWidth <= 650) { runtime.current.offset = -buttons.indexOf(next) * window.innerWidth * 0.68; tiles().forEach((key, i) => gsap.to(surfaces.current[key], { ...tileGeometry(i), duration: 0.5, ease: 'power3.out' })); }
-          next.focus({ preventScroll: true });
+          const nextIndex = e.key === 'Home' ? 0 : e.key === 'End' ? buttons.length - 1 : e.key === 'Tab' ? (index + (e.shiftKey ? -1 : 1) + buttons.length) % buttons.length : Math.max(0, Math.min(buttons.length - 1, index + (e.key === 'ArrowLeft' ? -1 : 1)));
+          e.preventDefault(); focusMenuTile(buttons[nextIndex], nextIndex);
         }
       }}
-      onPointerDown={e => { if (!menuOpen || runtime.current.busy) return; gesture.current = { x: e.clientX, offset: runtime.current.offset, down: true, moved: false }; }}
+      onPointerDown={e => { if (!menuOpen || runtime.current.busy || e.button !== 0 || !e.isPrimary) return; positionMenu(runtime.current.offset); gesture.current = { x: e.clientX, offset: runtime.current.offset, down: true, moved: false, pointerId: e.pointerId }; }}
+      onClickCapture={e => { if (gesture.current.moved && e.detail > 0) { e.preventDefault(); e.stopPropagation(); } }}
+      onClick={e => { if (menuOpen && e.target === stage.current) closeMenu(); }}
       onPointerMove={moveMenu} onPointerUp={finishMenu} onPointerCancel={finishMenu}>
       {[...basePages, 'research-article', 's-remote', 'project'].map(key => <PageSurface key={key} surfaceRef={node => { surfaces.current[key] = node; }} pageKey={key} active={surfaceKey(path) === key} menu={menuOpen && tiles().includes(key)} busy={busy} revealing={revealing} title={key === 's-remote' ? 'S-Remote' : key === sideQuestsPath ? 'Side Quests' : key === 'research-article' ? 'anecdote' : key === researchPath ? 'research' : key === '/about' ? 'about' : key === '/' ? 'cases' : project?.title.toLowerCase() ?? 'case'} onSelect={() => selectPage(key === 'project' ? projectPath : key === 'research-article' ? researchArticlePath : key === 's-remote' ? sRemotePath : key)} onMenu={openMenu} onContact={openContact}>
         {key === '/' ? <Work /> : key === '/about' ? <About onContact={openContact} /> : key === sideQuestsPath ? <SideQuests /> : key === 's-remote' ? <SRemoteProject /> : key === researchPath ? <ResearchGallery /> : key === 'research-article' ? <Research /> : project ? <ProjectPage key={project.slug} project={project} /> : <main tabIndex={-1} className="not-found"><p className="micro">404</p><h1>Page not found.</h1><RouteLink href="/">Back to work <Arrow /></RouteLink></main>}
