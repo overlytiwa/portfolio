@@ -1,6 +1,5 @@
 .project-page--polaroid .project-info h1,
-.project-page--polaroid .project-description,
-.project-page--polaroid .next-project > span:nth-child(2) { letter-spacing: 0; }
+.project-page--polaroid .project-description { letter-spacing: 0; }
 .project-page--polaroid .micro, .project-page--polaroid .project-actions a { text-transform: none; }
 .project-page--polaroid .project-description { line-height: 1.3; }
 .project-page--polaroid .project-hero-image { background: #e8e6df; }

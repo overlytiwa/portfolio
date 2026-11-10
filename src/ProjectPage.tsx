@@ -1,5 +1,5 @@
 import { Arrow, ImageSlot } from './components';
-import { projects, type Project } from './content';
+import { type Project } from './content';
 import { Reveal } from './motion';
 import { RouteLink } from './navigation';
 import { AduneCaseStudy } from './AduneCaseStudy';
@@ -10,7 +10,6 @@ import { DiscArchiveCaseStudy } from './DiscArchiveCaseStudy';
 import { PolaroidCaseStudy } from './PolaroidCaseStudy';
 
 export function ProjectPage({ project }: { project: Project }) {
-  const next = projects[(projects.indexOf(project) + 1) % projects.length];
   const website = project.websiteUrl ?? (project.caseStudy === 'miolad-hotels' ? mioladWebsite : aduneWebsite);
   const previewAnchor = project.previewAnchor ?? (project.caseStudy === 'miolad-hotels' ? 'miolad-website' : 'adune-website');
   return <main tabIndex={-1} className={`project-page ${project.caseStudy === 'polaroid' ? 'project-page--polaroid' : ''}`}>
@@ -25,6 +24,5 @@ export function ProjectPage({ project }: { project: Project }) {
       <ImageSlot src={project.coverImage} label={`${project.title} main image`} tone={project.tone} className="project-hero-image" eager />
     </section>
     {project.caseStudy === 'polaroid' ? <PolaroidCaseStudy website={website} /> : project.caseStudy === 'disc-archive' ? <DiscArchiveCaseStudy website={website} /> : project.caseStudy === 'lasgidi' ? <LasgidiCaseStudy website={website} /> : project.caseStudy === 'adune-home' ? <AduneCaseStudy /> : project.caseStudy === 'miolad-hotels' ? <MioladCaseStudy /> : <section className="project-detail-images" aria-label="Project gallery">{project.images.map((image, index) => <ImageSlot key={index} src={image} label={`${project.title} detail ${index + 1}`} tone={index === 0 ? 'stone' : 'sand'} />)}</section>}
-    {projects.length > 1 ? <RouteLink href={`/work/${next.slug}`} className="next-project"><span className="micro">Next project</span><span>{next.title.toLowerCase()}</span><Arrow /></RouteLink> : <RouteLink href="/" className="next-project"><span className="micro">Back to the portfolio</span><span>all work</span><Arrow direction="left" /></RouteLink>}
   </main>;
 }

@@ -101,9 +101,6 @@ main:focus { outline: none; }
 .project-hero-image { min-height: calc(100svh - 76px); }
 .project-detail-images { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 100px; }
 .project-detail-images .image-slot { aspect-ratio: 5 / 4; }
-.next-project { display: grid; grid-template-columns: 28.75% 1fr auto; align-items: center; padding: 110px 0 70px; gap: 15px; }
-.next-project > span:nth-child(2) { font-size: clamp(48px, 6vw, 100px); line-height: .95; letter-spacing: -.05em; }
-.next-project .arrow { width: 60px; height: 60px; }
 
 dialog { color: var(--ink); border: 0; padding: 0; }
 dialog::backdrop { background: rgb(17 17 17 / calc(var(--shade, 1) * .55)); }
@@ -178,10 +175,6 @@ dialog::backdrop { background: rgb(17 17 17 / calc(var(--shade, 1) * .55)); }
   .project-description { font-size: 21px; margin-top: 40px; }
   .project-hero-image { min-height: 0; aspect-ratio: 4 / 5; }
   .project-detail-images { margin-top: 60px; grid-template-columns: 1fr; }
-  .next-project { grid-template-columns: 1fr auto; padding: 65px 0 35px; gap: 20px; }
-  .next-project > span:first-child { grid-column: 1 / -1; }
-  .next-project > span:nth-child(2) { font-size: 14vw; }
-  .next-project .arrow { width: 36px; height: 36px; }
   .contact-dialog { width: calc(100vw - 16px); max-height: calc(100dvh - 32px); margin: 16px auto; }
   .contact-shell { padding: 18px; }
   .contact-tabs { gap: 25px; }
