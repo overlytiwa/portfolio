@@ -8,11 +8,12 @@ import { aduneWebsite } from './aduneProject';
 import { LasgidiCaseStudy } from './LasgidiCaseStudy';
 import { DiscArchiveCaseStudy } from './DiscArchiveCaseStudy';
 import { PolaroidCaseStudy } from './PolaroidCaseStudy';
+import { ListeningShelfCaseStudy } from './ListeningShelfCaseStudy';
 
 export function ProjectPage({ project }: { project: Project }) {
   const website = project.websiteUrl ?? (project.caseStudy === 'miolad-hotels' ? mioladWebsite : aduneWebsite);
   const previewAnchor = project.previewAnchor ?? (project.caseStudy === 'miolad-hotels' ? 'miolad-website' : 'adune-website');
-  return <main tabIndex={-1} className={`project-page ${project.caseStudy === 'polaroid' ? 'project-page--polaroid' : ''}`}>
+  return <main tabIndex={-1} className={`project-page ${project.caseStudy === 'polaroid' ? 'project-page--polaroid' : project.caseStudy === 'listening-shelf' ? 'project-page--listening-shelf' : ''}`}>
     <section className="project-hero">
       <div className="project-info">
         <Reveal as="h1">{project.title.toLowerCase()}</Reveal>
@@ -23,6 +24,6 @@ export function ProjectPage({ project }: { project: Project }) {
       </div>
       <ImageSlot src={project.coverImage} label={`${project.title} main image`} tone={project.tone} className="project-hero-image" eager />
     </section>
-    {project.caseStudy === 'polaroid' ? <PolaroidCaseStudy website={website} /> : project.caseStudy === 'disc-archive' ? <DiscArchiveCaseStudy website={website} /> : project.caseStudy === 'lasgidi' ? <LasgidiCaseStudy website={website} /> : project.caseStudy === 'adune-home' ? <AduneCaseStudy /> : project.caseStudy === 'miolad-hotels' ? <MioladCaseStudy /> : <section className="project-detail-images" aria-label="Project gallery">{project.images.map((image, index) => <ImageSlot key={index} src={image} label={`${project.title} detail ${index + 1}`} tone={index === 0 ? 'stone' : 'sand'} />)}</section>}
+    {project.caseStudy === 'listening-shelf' ? <ListeningShelfCaseStudy website={website} /> : project.caseStudy === 'polaroid' ? <PolaroidCaseStudy website={website} /> : project.caseStudy === 'disc-archive' ? <DiscArchiveCaseStudy website={website} /> : project.caseStudy === 'lasgidi' ? <LasgidiCaseStudy website={website} /> : project.caseStudy === 'adune-home' ? <AduneCaseStudy /> : project.caseStudy === 'miolad-hotels' ? <MioladCaseStudy /> : <section className="project-detail-images" aria-label="Project gallery">{project.images.map((image, index) => <ImageSlot key={index} src={image} label={`${project.title} detail ${index + 1}`} tone={index === 0 ? 'stone' : 'sand'} />)}</section>}
   </main>;
 }
