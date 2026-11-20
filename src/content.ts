@@ -29,12 +29,13 @@ export interface Project {
   coverImage: string;
   images: [string, string];
   tone: 'sand' | 'stone' | 'sage';
-  caseStudy?: 'adune-home' | 'miolad-hotels' | 'lasgidi' | 'disc-archive' | 'polaroid' | 'listening-shelf';
+  caseStudy?: 'adune-home' | 'miolad-hotels' | 'lasgidi' | 'disc-archive' | 'polaroid' | 'listening-shelf' | 'derazee';
   websiteUrl?: string;
   previewAnchor?: string;
 }
 
 export const projects: Project[] = [
+  { slug: 'derazee', title: 'Derazee', category: 'Web design / Front-end development', year: '2026', description: 'A digital home for Derazee Development Initiative, an Osogbo nonprofit supporting children, widows and older people. Clear program information and simple ways to donate, volunteer and get in touch.', coverImage: '/projects/derazee/osogbo-portrait.webp', images: ['', ''], tone: 'sage', caseStudy: 'derazee', websiteUrl: 'https://www.derazee.com.ng/', previewAnchor: 'derazee-preview' },
   { slug: 'lasgidi', title: 'Lasgidi', category: 'Web design / Front-end development', year: '2026', description: 'An immersive portrait of Lagos. A digital city guide that brings together the coastline, culture and architecture of a place always in motion.', coverImage: '/projects/lasgidi/lagos-marina.jpg', images: ['', ''], tone: 'stone', caseStudy: 'lasgidi', websiteUrl: 'https://lasgidi-blush.vercel.app/', previewAnchor: 'lasgidi-preview' },
   { slug: 'disc-archive', title: 'The Disc Archive', category: 'Creative development / 3D web', year: '2026', description: 'An independent discography experience that turns seventeen Kanye West releases into a tactile collection of three-dimensional CDs, with album stories just beyond the surface.', coverImage: '/projects/disc-archive/cover.svg', images: ['', ''], tone: 'sand', caseStudy: 'disc-archive', websiteUrl: 'https://kw-seven.vercel.app/', previewAnchor: 'disc-archive-preview' },
   { slug: 'polaroid', title: 'Polaroid', category: 'Web app / Creative development', year: '2026', description: 'A camera and photographic scrapbook for the browser. Capture or import a photograph, find its character, and turn it into something worth keeping.', coverImage: '/projects/polaroid/cover.svg', images: ['', ''], tone: 'sand', caseStudy: 'polaroid', websiteUrl: 'https://polaroid.overly.cc/', previewAnchor: 'polaroid-preview' },
