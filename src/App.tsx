@@ -9,7 +9,9 @@ import { ProjectPage } from './ProjectPage';
 import { PageSurface } from './PageSurface';
 import { Research } from './Research';
 import { ResearchGallery } from './ResearchGallery';
-import { SideQuests, SRemoteProject, sideQuestsPath, sRemotePath } from './SideQuests';
+import { SideQuests, SRemoteProject, sideQuestsPath } from './SideQuests';
+import { DesktopQuestProject } from './DesktopQuestProject';
+import { desktopQuests, sideQuestPages, sideQuestForPath } from './sideQuestData';
 import { projects } from './content';
 import { gsap, reducedMotion } from './motion';
 import { menuLayout, clampMenuOffset, revealMenuTile, snapMenuOffset, menuTilePosition } from './menuLayout';
@@ -20,7 +22,7 @@ const researchPath = '/research';
 const researchArticlePath = '/research/001';
 const isResearchArticle = (path: string) => path === researchArticlePath;
 const basePages = ['/', '/about', researchPath, sideQuestsPath];
-const surfaceKey = (path: string) => path === sRemotePath ? 's-remote' : isResearchArticle(path) ? 'research-article' : basePages.includes(path) ? path : 'project';
+const surfaceKey = (path: string) => sideQuestForPath(path)?.slug ?? (isResearchArticle(path) ? 'research-article' : basePages.includes(path) ? path : 'project');
 
 export default function App() {
   const [path, setPath] = useState(currentPath);
@@ -37,7 +39,7 @@ export default function App() {
   const gesture = useRef({ x: 0, offset: 0, down: false, moved: false, pointerId: -1 });
   const returnFocus = useRef<HTMLElement | null>(null);
   const duration = () => reducedMotion() ? 0 : 1.4;
-  const tiles = () => [...basePages, ...(isProject(runtime.current.path) ? ['project'] : isResearchArticle(runtime.current.path) ? ['research-article'] : runtime.current.path === sRemotePath ? ['s-remote'] : [])];
+  const tiles = () => [...basePages, ...(isProject(runtime.current.path) ? ['project'] : isResearchArticle(runtime.current.path) ? ['research-article'] : sideQuestForPath(runtime.current.path) ? [sideQuestForPath(runtime.current.path)!.slug] : [])];
   const layout = () => menuLayout(window.innerWidth, tiles().length);
   function tileGeometry(index: number) {
     return menuTilePosition(index, runtime.current.offset, layout());
@@ -145,7 +147,7 @@ export default function App() {
       if (newKey === 'project') flushSync(() => setProjectPath(to));
       commit(to); surfaces.current[newKey]?.querySelector('.page-scroll')?.scrollTo(0, 0); settle(to); return;
     }
-    const sourceImage = newKey === 's-remote' || oldKey === 's-remote' ? null : origin?.querySelector<HTMLElement>('.image-slot') ?? (isProject(runtime.current.path) ? source.querySelector<HTMLElement>('.project-hero-image') : null);
+    const sourceImage = sideQuestForPath(to) || sideQuestForPath(runtime.current.path) ? null : origin?.querySelector<HTMLElement>('.image-slot') ?? (isProject(runtime.current.path) ? source.querySelector<HTMLElement>('.project-hero-image') : null);
     // Keep a fixed image bridge while its destination is rendered and measured.
     let bridge: HTMLElement | null = null;
     let rect: DOMRect | undefined;
@@ -165,7 +167,7 @@ export default function App() {
     flushSync(() => setBusy(true));
     gsap.set(target, { visibility: 'visible', zIndex: 3, x: 0, scale: 1, clipPath: 'inset(0 0% 0 0)' });
     const matchingImages = [...target.querySelectorAll<HTMLElement>(`[href="${runtime.current.path}"] .image-slot`)];
-    const targetImage = newKey === 'project' || newKey === 's-remote' ? target.querySelector<HTMLElement>('.project-hero-image') : matchingImages.find(image => { const r = image.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth; }) ?? matchingImages.find(image => { const r = image.getBoundingClientRect(); return r.right > 0 && r.left < window.innerWidth; });
+    const targetImage = newKey === 'project' || sideQuestForPath(to) ? target.querySelector<HTMLElement>('.project-hero-image') : matchingImages.find(image => { const r = image.getBoundingClientRect(); return r.left >= 0 && r.right <= window.innerWidth; }) ?? matchingImages.find(image => { const r = image.getBoundingClientRect(); return r.right > 0 && r.left < window.innerWidth; });
     const tl = gsap.timeline({ onComplete: () => { settle(to); bridge?.remove(); } });
     timeline.current = tl;
     commit(to);
@@ -230,7 +232,7 @@ export default function App() {
     window.addEventListener('blur', blur);
     return () => { node.removeEventListener('wheel', wheel); window.removeEventListener('blur', blur); };
   }, [menuOpen]);
-  useEffect(() => { document.title = path === sRemotePath ? 'S-Remote — Side Quests / Overly' : path === sideQuestsPath ? 'Side Quests — Ogundiji Tiwalope / Overly' : isResearchArticle(path) ? 'Anecdote — Research 001 / Overly' : path === researchPath ? 'Research — Ogundiji Tiwalope / Overly' : path === '/about' ? 'About — Ogundiji Tiwalope / Overly' : isProject(path) ? `${projects.find(p => path.endsWith(p.slug))!.title} — Overly` : 'Overly — Ogundiji Tiwalope'; }, [path]);
+  useEffect(() => { document.title = sideQuestForPath(path) ? `${sideQuestForPath(path)!.title} — Side Quests / Overly` : path === sideQuestsPath ? 'Side Quests — Ogundiji Tiwalope / Overly' : isResearchArticle(path) ? 'Anecdote — Research 001 / Overly' : path === researchPath ? 'Research — Ogundiji Tiwalope / Overly' : path === '/about' ? 'About — Ogundiji Tiwalope / Overly' : isProject(path) ? `${projects.find(p => path.endsWith(p.slug))!.title} — Overly` : 'Overly — Ogundiji Tiwalope'; }, [path]);
   function moveMenu(event: PointerEvent) {
     if (!gesture.current.down || runtime.current.busy || event.pointerId !== gesture.current.pointerId) return;
     const delta = event.clientX - gesture.current.x;
@@ -271,8 +273,8 @@ export default function App() {
       onClickCapture={e => { if (gesture.current.moved && e.detail > 0) { e.preventDefault(); e.stopPropagation(); } }}
       onClick={e => { if (menuOpen && e.target === stage.current) closeMenu(); }}
       onPointerMove={moveMenu} onPointerUp={finishMenu} onPointerCancel={finishMenu}>
-      {[...basePages, 'research-article', 's-remote', 'project'].map(key => <PageSurface key={key} surfaceRef={node => { surfaces.current[key] = node; }} pageKey={key} active={surfaceKey(path) === key} menu={menuOpen && tiles().includes(key)} busy={busy} revealing={revealing} title={key === 's-remote' ? 'S-Remote' : key === sideQuestsPath ? 'Side Quests' : key === 'research-article' ? 'anecdote' : key === researchPath ? 'research' : key === '/about' ? 'about' : key === '/' ? 'cases' : project?.title.toLowerCase() ?? 'case'} onSelect={() => selectPage(key === 'project' ? projectPath : key === 'research-article' ? researchArticlePath : key === 's-remote' ? sRemotePath : key)} onMenu={openMenu} onContact={openContact}>
-        {key === '/' ? <Work /> : key === '/about' ? <About onContact={openContact} /> : key === sideQuestsPath ? <SideQuests /> : key === 's-remote' ? <SRemoteProject /> : key === researchPath ? <ResearchGallery /> : key === 'research-article' ? <Research /> : project ? <ProjectPage key={project.slug} project={project} /> : <main tabIndex={-1} className="not-found"><p className="micro">404</p><h1>Page not found.</h1><RouteLink href="/">Back to work <Arrow /></RouteLink></main>}
+      {[...basePages, 'research-article', ...sideQuestPages.map(quest => quest.slug), 'project'].map(key => <PageSurface key={key} surfaceRef={node => { surfaces.current[key] = node; }} pageKey={key} active={surfaceKey(path) === key} menu={menuOpen && tiles().includes(key)} busy={busy} revealing={revealing} title={sideQuestPages.find(quest => quest.slug === key)?.title ?? ( key === sideQuestsPath ? 'Side Quests' : key === 'research-article' ? 'anecdote' : key === researchPath ? 'research' : key === '/about' ? 'about' : key === '/' ? 'cases' : project?.title.toLowerCase() ?? 'case')} onSelect={() => selectPage(key === 'project' ? projectPath : key === 'research-article' ? researchArticlePath : sideQuestPages.find(quest => quest.slug === key)?.path ?? key)} onMenu={openMenu} onContact={openContact}>
+        {key === '/' ? <Work /> : key === '/about' ? <About onContact={openContact} /> : key === sideQuestsPath ? <SideQuests /> : key === 's-remote' ? <SRemoteProject /> : desktopQuests.some(quest => quest.slug === key) ? <DesktopQuestProject project={desktopQuests.find(quest => quest.slug === key)!} /> : key === researchPath ? <ResearchGallery /> : key === 'research-article' ? <Research /> : project ? <ProjectPage key={project.slug} project={project} /> : <main tabIndex={-1} className="not-found"><p className="micro">404</p><h1>Page not found.</h1><RouteLink href="/">Back to work <Arrow /></RouteLink></main>}
       </PageSurface>)}
     </div>
     <Contact open={contactOpen} close={() => setContactOpen(false)} />

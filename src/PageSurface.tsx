@@ -2,6 +2,7 @@ import { useEffect, useRef, type ReactNode, type RefCallback } from 'react';
 import Lenis from 'lenis';
 import { SceneContext, reducedMotion } from './motion';
 import { Header } from './components';
+import { sideQuestPages } from './sideQuestData';
 
 export function PageSurface({ surfaceRef, pageKey, active, menu, busy, revealing, title, onSelect, onMenu, onContact, children }: {
   surfaceRef: RefCallback<HTMLDivElement>; pageKey: string; active: boolean; menu: boolean; busy: boolean; revealing: boolean;
@@ -22,6 +23,6 @@ export function PageSurface({ surfaceRef, pageKey, active, menu, busy, revealing
       </div></div>
     </div>
     <div className="menu-page-title" aria-hidden="true"><span>{title}</span></div>
-    <button className="menu-page-select" aria-label={pageKey === '/' ? 'View cases' : pageKey === '/about' ? 'About Tiwalope' : pageKey === '/research' ? 'View all research' : pageKey === '/side-quests' ? 'View Side Quests' : pageKey === 's-remote' ? 'Return to S-Remote' : pageKey === 'research-article' ? 'Return to research paper' : 'Return to project'} onClick={onSelect} tabIndex={menu ? 0 : -1} aria-hidden={!menu} />
+    <button className="menu-page-select" aria-label={pageKey === '/' ? 'View cases' : pageKey === '/about' ? 'About Tiwalope' : pageKey === '/research' ? 'View all research' : pageKey === '/side-quests' ? 'View Side Quests' : sideQuestPages.some(quest => quest.slug === pageKey) ? `Return to ${sideQuestPages.find(quest => quest.slug === pageKey)!.title}` : pageKey === 'research-article' ? 'Return to research paper' : 'Return to project'} onClick={onSelect} tabIndex={menu ? 0 : -1} aria-hidden={!menu} />
   </div>;
 }
